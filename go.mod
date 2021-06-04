@@ -6,6 +6,7 @@ replace go.etcd.io/bbolt => github.com/openziti/bbolt v1.3.6-0.20210317142109-54
 
 require (
 	github.com/aws/aws-sdk-go v1.31.14
+	github.com/google/uuid v1.2.0
 	github.com/influxdata/influxdb1-client v0.0.0-20191209144304-8bf82d3c094d
 	github.com/jedib0t/go-pretty/v6 v6.0.4
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a

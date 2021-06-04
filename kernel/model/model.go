@@ -176,8 +176,7 @@ func (self *VarConfig) SetDefaults() {
 }
 
 type Model struct {
-	name   string
-	Parent *Model
+	Id string
 
 	Scope
 	VarConfig           VarConfig
@@ -203,7 +202,7 @@ func (m *Model) GetModel() *Model {
 }
 
 func (m *Model) GetId() string {
-	return m.name
+	return m.Id
 }
 
 func (m *Model) GetType() string {
@@ -215,16 +214,12 @@ func (m *Model) GetScope() *Scope {
 }
 
 func (m *Model) GetParentEntity() Entity {
-	// if we just return m.Parent, and m.Parent is nil we'll return a non-nil interface with type=*Model and value = nil
-	if m.Parent == nil {
-		return nil
-	}
-	return m.Parent
+	return nil
 }
 
 func (m *Model) Matches(entityType string, matcher EntityMatcher) bool {
 	if EntityTypeModel == entityType {
-		return matcher(m) || (m.Parent != nil && m.Parent.Matches(entityType, matcher))
+		return matcher(m)
 	}
 
 	if EntityTypeRegion == entityType || EntityTypeHost == entityType || EntityTypeComponent == entityType {
@@ -250,11 +245,10 @@ func (m *Model) GetChildren() []Entity {
 	return result
 }
 
-func (m *Model) init(name string) {
+func (m *Model) init() {
 	if m.initialized.CompareAndSwap(false, true) {
 		m.VarConfig.SetDefaults()
 
-		m.name = name
 		if m.Data == nil {
 			m.Data = Data{}
 		}
@@ -560,10 +554,10 @@ func (f ActionFunc) Execute(m *Model) error {
 	return f(m)
 }
 
-func NewRun(label *Label, model *Model) Run {
+func NewRun() Run {
 	return &runImpl{
-		label: label,
-		model: model,
+		label: GetLabel(),
+		model: GetModel(),
 		runId: fmt.Sprintf("%d", info.NowInMilliseconds()),
 	}
 }

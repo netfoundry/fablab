@@ -28,7 +28,7 @@ type awsKeyManager struct{}
 func (l awsKeyManager) Bootstrap(m *model.Model) error {
 	if !m.HasVariable("credentials.aws.ssh_key_name") {
 		environment := m.MustStringVariable("environment")
-		instanceId := model.ActiveInstanceId()
+		instanceId := model.GetLabel().InstanceId
 		keyName := fmt.Sprintf("%v-%v", environment, instanceId)
 		m.PutVariable("credentials.aws.ssh_key_name", keyName)
 	}
